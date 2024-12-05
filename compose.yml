@@ -1,0 +1,10 @@
+services:
+  portfolio:
+    image: node:23
+    container_name: portfolio
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - 5173:5173
+    command: npm run dev
