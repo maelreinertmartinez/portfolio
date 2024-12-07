@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import NavMenu from './components/NavMenu.vue'
 </script>
 
 <template>
-  <p>Hello World</p>
-  <RouterView />
+  <div class="flex bg-timberwolf-200 w-full h-screen">
+    <NavMenu />
+    <RouterView />
+  </div>
 </template>
