@@ -4,7 +4,7 @@ import NavMenuItem from './NavMenuItem.vue'
 
 <template>
   <nav
-    class="flex flex-col gap-4 text-gray-600 border-y-8 border-l-8 p-12 rounded-l-xl w-max h-max border-orange-500"
+    class="flex flex-col gap-4 text-gray-600 border-y-8 border-l-8 border-orange-500 p-12 rounded-l-xl w-max h-max"
   >
     <NavMenuItem class="w-max" to="/">About me</NavMenuItem>
     <NavMenuItem class="w-max" to="/skills">Skills</NavMenuItem>
