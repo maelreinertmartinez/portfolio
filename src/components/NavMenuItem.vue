@@ -7,13 +7,13 @@ defineProps<{
 </script>
 
 <template>
-  <RouterLink class="link relative" :to="to">
+  <RouterLink class="link relative flex items-center" :to="to">
     <div
-      class="text relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-gray-600 after:transition-all after:duration-300 after:ease-in-out"
+      class="text relative whitespace-nowrap after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-gray-600 after:transition-all after:duration-300 after:ease-in-out"
     >
       <slot />
     </div>
-    <div class="cursor"></div>
+    <div class="cursor absolute top-1/2 -translate-y-1/2 left-0 w-px bg-gray-600"></div>
   </RouterLink>
 </template>
 
@@ -23,25 +23,11 @@ defineProps<{
   width: 100%;
 }
 
-.link {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
 .text {
-  position: relative;
-  white-space: nowrap;
   animation: typing 1.5s forwards;
 }
 
 .cursor {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 0;
-  width: 1px;
-  background: #4b5563;
   animation: cursor 1.5s forwards;
 }
 
@@ -71,7 +57,7 @@ defineProps<{
   }
   100% {
     height: 0px;
-    left: calc(100% + 5px);
+    left: calc(100% + 3px);
   }
 }
 </style>

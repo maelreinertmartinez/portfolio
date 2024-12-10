@@ -3,19 +3,43 @@ import NavMenuItem from './NavMenuItem.vue'
 </script>
 
 <template>
-  <nav
-    class="flex flex-col gap-4 text-gray-600 border-y-8 border-l-8 border-orange-500 p-12 rounded-l-xl w-max h-max"
-  >
-    <NavMenuItem class="w-max" to="/">About me</NavMenuItem>
-    <NavMenuItem class="w-max" to="/skills">Skills</NavMenuItem>
-    <NavMenuItem class="w-max" to="/projects">Projects</NavMenuItem>
+  <nav class="item rounded-l-lg w-44 h-48 flex justify-center items-center">
+    <div class="container rounded-l-sm bg-timberwolf-200 flex justify-center items-center">
+      <div class="flex flex-col gap-4 w-max">
+        <NavMenuItem class="w-max" to="/">About me</NavMenuItem>
+        <NavMenuItem class="w-max" to="/skills">Skills</NavMenuItem>
+        <NavMenuItem class="w-max" to="/projects">Projects</NavMenuItem>
+      </div>
+    </div>
   </nav>
 </template>
 
 <style scoped>
-nav {
-  box-shadow:
-    inset 0 0 8px 0 rgba(0, 0, 0, 0.2),
-    0 0 8px 0 rgba(0, 0, 0, 0.2);
+@property --angle {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: false;
+}
+
+.item {
+  background: conic-gradient(
+    from 135deg,
+    #f97316,
+    #f97316 var(--angle),
+    transparent var(--angle),
+    transparent
+  );
+  animation: rotate 1.5s forwards;
+}
+
+.container {
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+}
+
+@keyframes rotate {
+  to {
+    --angle: 75%;
+  }
 }
 </style>
