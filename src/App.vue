@@ -4,7 +4,7 @@ import NavMenu from './components/NavMenu.vue'
 </script>
 
 <template>
-  <div class="flex bg-timberwolf-200 w-full h-screen relative overflow-hidden">
+  <div class="flex bg-timberwolf-200 w-full h-screen fixed overflow-hidden text-gray-700">
     <NavMenu class="absolute top-8 -right-4" />
     <RouterView />
   </div>

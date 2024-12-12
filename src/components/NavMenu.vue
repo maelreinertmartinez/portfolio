@@ -3,13 +3,11 @@ import NavMenuItem from './NavMenuItem.vue'
 </script>
 
 <template>
-  <nav class="item rounded-l-lg w-44 h-48 flex justify-center items-center">
-    <div class="container rounded-l-sm bg-timberwolf-200 flex justify-center items-center">
-      <div class="flex flex-col gap-4 w-max">
-        <NavMenuItem class="w-max" to="/">About me</NavMenuItem>
-        <NavMenuItem class="w-max" to="/skills">Skills</NavMenuItem>
-        <NavMenuItem class="w-max" to="/projects">Projects</NavMenuItem>
-      </div>
+  <nav class="item rounded-l-lg p-2">
+    <div class="flex flex-col rounded-l-sm bg-timberwolf-200 p-12 gap-4 w-max">
+      <NavMenuItem class="w-max text-lg" to="/">About me</NavMenuItem>
+      <NavMenuItem class="w-max text-lg" to="/skills">Skills</NavMenuItem>
+      <NavMenuItem class="w-max text-lg" to="/projects">Projects</NavMenuItem>
     </div>
   </nav>
 </template>
@@ -23,23 +21,18 @@ import NavMenuItem from './NavMenuItem.vue'
 
 .item {
   background: conic-gradient(
-    from 135deg,
+    from 90deg,
     #f97316,
     #f97316 var(--angle),
     transparent var(--angle),
     transparent
   );
-  animation: rotate 1.5s forwards;
-}
-
-.container {
-  width: calc(100% - 16px);
-  height: calc(100% - 16px);
+  animation: rotate 3s forwards;
 }
 
 @keyframes rotate {
   to {
-    --angle: 75%;
+    --angle: 100%;
   }
 }
 </style>
