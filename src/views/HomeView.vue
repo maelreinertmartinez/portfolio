@@ -8,7 +8,7 @@ import InformationsMenu from '@/components/InformationsMenu.vue'
     <h1 class="fixed top-4 left-96 w-min text-9xl font-extrabold text-gray-700">
       Maël REINERT MARTINEZ
     </h1>
-    <InformationsMenu class="absolute bottom-8 -left-4" />
+    <InformationsMenu class="absolute bottom-24 -left-4" />
     <!--<div class="paragraph text-gray-700">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. In finibus nec dolor vitae convallis.
       Cras ultrices hendrerit dolor, eget convallis dolor dictum id. Vivamus placerat mauris nec
