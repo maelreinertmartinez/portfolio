@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import InformationsMenu from '@/components/InformationsMenu.vue'
+import MainInformations from '@/components/MainInformations.vue'
 </script>
 
 <template>
   <div>
-    <div class="fixed left-8 w-80 h-96 bg-timberwolf-300"></div>
-    <h1 class="fixed top-4 left-96 w-min text-9xl font-extrabold text-gray-700">
-      Maël REINERT MARTINEZ
-    </h1>
+    <MainInformations />
     <InformationsMenu class="absolute bottom-24 -left-4" />
     <!--<div class="paragraph text-gray-700">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. In finibus nec dolor vitae convallis.

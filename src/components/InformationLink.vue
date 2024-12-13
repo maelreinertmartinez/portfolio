@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AnimatedText from './AnimatedText.vue'
-import Icon from './Icon.vue'
+import AnimatedIcon from './AnimatedIcon.vue'
 
 interface Props {
   icon: string
@@ -12,10 +12,12 @@ defineProps<Props>()
 </script>
 
 <template>
-  <a :href="link" class="flex items-center gap-4">
-    <Icon :name="icon" :size="44" :stroke-width="1" />
-    <AnimatedText class="text-xl">
-      {{ text }}
-    </AnimatedText>
+  <a :href="link">
+    <div class="flex items-center gap-4">
+      <AnimatedIcon :icon="icon" size="42px" color="#374151" />
+      <AnimatedText class="text-xl">
+        {{ text }}
+      </AnimatedText>
+    </div>
   </a>
 </template>
