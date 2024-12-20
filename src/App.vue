@@ -4,6 +4,7 @@ import { RouterView } from 'vue-router'
 import NavMenu from './components/NavMenu.vue'
 import CurrentCursor from './components/CurrentCursor.vue'
 import AppLauncher from './components/AppLauncher.vue'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 const isLaunched = ref(false)
 
@@ -20,5 +21,6 @@ const launchApp = () => {
       <NavMenu class="absolute top-8 -right-4" />
       <RouterView />
     </div>
+    <SpeedInsights />
   </div>
 </template>
