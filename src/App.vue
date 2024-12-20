@@ -4,8 +4,8 @@ import { RouterView } from 'vue-router'
 import NavMenu from './components/NavMenu.vue'
 import CurrentCursor from './components/CurrentCursor.vue'
 import AppLauncher from './components/AppLauncher.vue'
-import { SpeedInsights } from '@vercel/speed-insights/next'
-import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/vue'
+import { Analytics } from '@vercel/analytics/nuxt'
 
 const isLaunched = ref(false)
 
