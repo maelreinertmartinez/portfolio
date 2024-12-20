@@ -4,8 +4,8 @@ import { onMounted, onUnmounted } from 'vue'
 const updateRadius = (hover: boolean) => {
   const rects = document.querySelectorAll('.cursor-svg rect')
   rects.forEach((rect) => {
-    rect.setAttribute('rx', hover ? '5' : '22')
-    rect.setAttribute('ry', hover ? '5' : '22')
+    rect.setAttribute('rx', hover ? '22' : '5')
+    rect.setAttribute('ry', hover ? '22' : '5')
   })
 }
 
@@ -39,28 +39,28 @@ onUnmounted(() => {
       class="outer-rect"
       x="5"
       y="5"
-      width="44"
-      height="44"
-      rx="22"
-      ry="22"
+      width="32"
+      height="32"
+      rx="16"
+      ry="16"
       stroke="#ddd6cc"
       fill="transparent"
-      stroke-width="10"
+      stroke-width="9"
     />
     <rect
       class="inner-rect"
       x="5"
       y="5"
-      width="44"
-      height="44"
-      rx="22"
-      ry="22"
+      width="32"
+      height="32"
+      rx="16"
+      ry="16"
       stroke="#374151"
       fill="transparent"
-      stroke-width="5"
+      stroke-width="4"
     />
-    <circle cx="27" cy="27" r="1" stroke="#ddd6cc" fill="#ddd6cc" stroke-width="12" />
-    <circle cx="27" cy="27" r="1" stroke="#374151" fill="#374151" stroke-width="7" />
+    <circle cx="21" cy="21" r="1" stroke="#ddd6cc" fill="#ddd6cc" stroke-width="10" />
+    <circle cx="21" cy="21" r="1" stroke="#374151" fill="#374151" stroke-width="5" />
   </svg>
 </template>
 
@@ -79,6 +79,6 @@ onUnmounted(() => {
 }
 
 .cursor-svg rect {
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 </style>
