@@ -3,6 +3,9 @@ export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      spacing: {
+        88: '22rem',
+      },
       colors: {
         timberwolf: {
           50: '#f8f6f4',
