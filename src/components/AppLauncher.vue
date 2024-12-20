@@ -1,15 +1,31 @@
 <script setup lang="ts">
 import AnimatedText from './AnimatedText.vue'
+import { ref } from 'vue'
+
+const isLaunching = ref(false)
+
+const handleLaunch = () => {
+  isLaunching.value = true
+  setTimeout(() => {
+    emit('launch')
+  }, 1500)
+}
+
+const emit = defineEmits(['launch'])
 </script>
 
 <template>
   <div class="flex justify-center items-center h-full">
-    <button class="text-3xl font-bold tracking-wider" @click="$emit('launch')">
+    <button
+      class="text-3xl font-bold tracking-wider"
+      @click="handleLaunch"
+      :class="{ launching: isLaunching }"
+    >
       <span class="button-side-top button-side"></span>
       <span class="button-side-bottom button-side"></span>
       <span class="button-side-left button-side"></span>
       <span class="button-side-right button-side"></span>
-      <AnimatedText>LAUNCH</AnimatedText>
+      <AnimatedText :isReverse="isLaunching">LAUNCH</AnimatedText>
     </button>
   </div>
 </template>
@@ -21,6 +37,7 @@ button {
   color: #374151;
   background: transparent;
   border: none;
+  cursor: pointer;
 }
 
 .button-side,
@@ -52,8 +69,7 @@ button {
   height: 4px;
   right: 0;
   transform: translateX(-100vw);
-  transition: transform 0.4s ease;
-  transition-delay: 0.2s;
+  transition: transform 0.6s ease;
 }
 
 .button-side-bottom::after {
@@ -62,8 +78,23 @@ button {
   height: 4px;
   left: 0;
   transform: translateX(100vw);
-  transition: transform 0.4s ease;
-  transition-delay: 0.2s;
+  transition: transform 0.6s ease;
+}
+
+.launching .button-side-top::after {
+  transform: translateX(-100vw) !important;
+}
+
+.launching .button-side-bottom::after {
+  transform: translateX(100vw) !important;
+}
+
+.launching .button-side-left::after {
+  transform: translateY(-100%) !important;
+}
+
+.launching .button-side-right::after {
+  transform: translateY(100%) !important;
 }
 
 .button-side-left,
@@ -116,5 +147,43 @@ button:hover .button-side-left::after,
 button:hover .button-side-right::after {
   transition-delay: 0.2s;
   transform: translateY(0);
+}
+
+.launching .text {
+  animation: typing-reverse 1.5s forwards !important;
+}
+
+.launching .cursor {
+  animation: cursor-reverse 1.5s forwards !important;
+}
+
+@keyframes typing-reverse {
+  0%,
+  20% {
+    clip-path: inset(0 0 0 0);
+  }
+  80%,
+  100% {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+@keyframes cursor-reverse {
+  0% {
+    height: 0px;
+    left: calc(100% + 3px);
+  }
+  20% {
+    height: 20px;
+    left: calc(100% + 3px);
+  }
+  85% {
+    height: 20px;
+    left: 0;
+  }
+  100% {
+    height: 0px;
+    left: 0;
+  }
 }
 </style>
