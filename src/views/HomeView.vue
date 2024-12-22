@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import InformationsMenu from '@/components/InformationsMenu.vue'
 import MainInformations from '@/components/MainInformations.vue'
+import { Direction } from '@/types/models'
 </script>
 
 <template>
   <div>
     <MainInformations />
-    <InformationsMenu class="absolute bottom-24 -left-4" />
+    <InformationsMenu :position="Direction.Left" class="absolute bottom-24 -left-2" />
     <!--<div class="paragraph text-gray-700">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. In finibus nec dolor vitae convallis.
       Cras ultrices hendrerit dolor, eget convallis dolor dictum id. Vivamus placerat mauris nec
