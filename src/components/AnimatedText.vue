@@ -1,23 +1,19 @@
+<script setup lang="ts">
+defineProps<{
+  isDisappearing?: boolean
+}>()
+</script>
+
 <template>
-  <div class="relative">
+  <div :class="['relative', { disappear: isDisappearing }]">
     <div
       class="text relative whitespace-nowrap after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-gray-600 after:transition-all after:duration-300 after:ease-in-out"
-      :class="{ 'text-reverse': isReverse }"
     >
       <slot />
     </div>
-    <div
-      class="cursor absolute top-1/2 -translate-y-1/2 left-0 w-px bg-gray-600"
-      :class="{ 'cursor-reverse': isReverse }"
-    ></div>
+    <div class="cursor absolute top-1/2 -translate-y-1/2 left-0 w-px bg-gray-600"></div>
   </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  isReverse?: boolean
-}>()
-</script>
 
 <style scoped>
 .text {
@@ -28,11 +24,11 @@ defineProps<{
   animation: cursor 1.5s forwards;
 }
 
-.text-reverse {
+.disappear .text {
   animation: typing-reverse 1.5s forwards !important;
 }
 
-.cursor-reverse {
+.disappear .cursor {
   animation: cursor-reverse 1.5s forwards !important;
 }
 
