@@ -11,7 +11,7 @@ defineProps<{
 <template>
   <div>
     <AnimatedBorder :position>
-      <div class="flex flex-col rounded-l-sm p-12 gap-4 w-max">
+      <div class="flex flex-col p-12 gap-4 w-max">
         <NavMenuItem class="w-max text-lg" to="/">About me</NavMenuItem>
         <NavMenuItem class="w-max text-lg" to="/skills">Skills</NavMenuItem>
         <NavMenuItem class="w-max text-lg" to="/projects">Projects</NavMenuItem>

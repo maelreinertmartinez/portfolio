@@ -80,10 +80,10 @@ onMounted(() => {
 
 <style scoped>
 .anim-border rect {
-  animation: rect 3s forwards;
+  animation: appear 3s forwards;
 }
 
-@keyframes rect {
+@keyframes appear {
   to {
     stroke-dashoffset: 0;
   }

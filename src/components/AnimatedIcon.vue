@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import BaseIcon from '@/components/BaseIcon.vue'
+
 defineProps<{
-  icon: string
-  size?: string
+  name: string
+  size?: number
   color?: string
   strokeWidth?: number
   defaultClass?: string
@@ -9,43 +11,29 @@ defineProps<{
 </script>
 
 <template>
-  <div
-    class="icon"
-    :style="{
-      '--color': color,
-      '--icon': `url(${icon})`,
-      '--size': size,
-    }"
+  <BaseIcon
+    :name="name"
+    :size="size"
+    :color="color"
+    :stroke-width="strokeWidth"
+    :default-class="defaultClass"
   />
 </template>
 
 <style scoped>
-@property --angle {
-  syntax: '<percentage>';
-  initial-value: 0%;
-  inherits: false;
+.lucide {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  stroke-linecap: round;
+  animation: appear 3s forwards;
 }
 
-.icon {
-  width: var(--size);
-  height: var(--size);
-  mask-image: var(--icon);
-  mask-size: contain;
-
-  background: conic-gradient(
-    from 180deg,
-    var(--color),
-    var(--color) var(--angle),
-    transparent var(--angle),
-    transparent
-  );
-
-  animation: rotate 1.5s forwards;
-}
-
-@keyframes rotate {
+@keyframes appear {
+  from {
+    stroke-dashoffset: 100;
+  }
   to {
-    --angle: 100%;
+    stroke-dashoffset: 0;
   }
 }
 </style>

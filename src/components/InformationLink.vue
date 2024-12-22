@@ -14,7 +14,7 @@ defineProps<Props>()
 <template>
   <a :href="link">
     <div class="flex items-center gap-4">
-      <AnimatedIcon :icon="icon" size="42px" color="#374151" />
+      <AnimatedIcon :name="icon" :size="42" color="#374151" />
       <AnimatedText class="text-xl">
         {{ text }}
       </AnimatedText>
