@@ -22,15 +22,15 @@ defineProps<{
 
 <style scoped>
 .lucide {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
+  stroke-dasharray: 70;
+  stroke-dashoffset: 70;
   stroke-linecap: round;
   animation: appear 3s forwards;
 }
 
 @keyframes appear {
   from {
-    stroke-dashoffset: 100;
+    stroke-dashoffset: 70;
   }
   to {
     stroke-dashoffset: 0;
