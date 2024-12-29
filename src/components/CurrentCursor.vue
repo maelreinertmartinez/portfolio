@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
+
+const isHoveringClickableElement = ref<boolean | undefined>(undefined)
 
 const updateRadius = (hover: boolean) => {
   const rects = document.querySelectorAll('.cursor-svg rect')
@@ -14,8 +16,18 @@ const updateCursorPosition = (e: MouseEvent) => {
   cursor!.setAttribute('style', `left: ${e.clientX}px; top: ${e.clientY}px`)
 
   const element = document.elementFromPoint(e.clientX, e.clientY)
-  const isClickable = element?.matches('button, a') || element?.closest('button, a') !== null
-  updateRadius(isClickable)
+  const lastIsHoveringClickableElement = isHoveringClickableElement.value
+
+  if (isHoveringClickableElement.value === undefined) {
+    isHoveringClickableElement.value =
+      element?.matches('button, a') || element?.closest('button, a') !== null
+    updateRadius(isHoveringClickableElement.value)
+  } else {
+    isHoveringClickableElement.value =
+      element?.matches('button, a') || element?.closest('button, a') !== null
+    if (isHoveringClickableElement.value !== lastIsHoveringClickableElement)
+      updateRadius(isHoveringClickableElement.value)
+  }
 }
 
 const initializeCursorPosition = () => {
@@ -65,12 +77,10 @@ onUnmounted(() => {
 </template>
 
 <style>
-/* Style global pour cacher le curseur par défaut */
 * {
   cursor: none !important;
 }
 
-/* Vos styles existants */
 .cursor-svg {
   position: fixed;
   pointer-events: none;
