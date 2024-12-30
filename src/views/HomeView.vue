@@ -8,7 +8,7 @@ import { Direction } from '@/types/models'
 <template>
   <div>
     <MainInformations />
-    <div class="absolute bottom-24 -left-2 w-[calc(100%+0.5rem)] flex items-center">
+    <div class="absolute bottom-24 -left-2 w-[calc(100%+1rem)] flex items-center">
       <InformationsMenu :position="Direction.Left" class="w-min" />
       <TextParagraph class="w-full mx-10">
         <p>
@@ -18,20 +18,11 @@ import { Direction } from '@/types/models'
           Vue.js et Tailwind CSS.
         </p>
         <p>
-          J'ai également travaillé sur des projets de développement d'interface utilisateur avec
-          Vue.js et Tailwind CSS.
-        </p>
-        <p>
-          J'ai également travaillé sur des projets de développement d'interface utilisateur avec
-          Vue.js et Tailwind CSS.
-        </p>
-        <p>
-          J'ai également travaillé sur des projets de développement d'interface utilisateur avec
-          Vue.js et Tailwind CSS.
-        </p>
-        <p>
-          J'ai également travaillé sur des projets de développement d'interface utilisateur avec
-          Vue.js et Tailwind CSS.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam corrupti, ipsa suscipit
+          maiores molestiae exercitationem nam voluptas provident et unde labore, at repellendus.
+          Officiis, ipsa repellat est ea corrupti ducimus! Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Error deserunt eius laboriosam ut ipsa reiciendis qui vitae harum
+          nesciunt beatae nulla impedit porro saepe at fugiat, dolorum sunt. Debitis, corporis.
         </p>
       </TextParagraph>
     </div>

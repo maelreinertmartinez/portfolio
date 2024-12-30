@@ -47,6 +47,8 @@ onUnmounted(() => {
 
 <template>
   <svg width="54" height="54" version="1.1" xmlns="http://www.w3.org/2000/svg" class="cursor-svg">
+    <circle cx="21" cy="21" r="1" stroke="#ddd6cc" fill="#ddd6cc" stroke-width="10" />
+    <circle cx="21" cy="21" r="1" stroke="#374151" fill="#374151" stroke-width="5" />
     <rect
       class="outer-rect"
       x="5"
@@ -71,8 +73,6 @@ onUnmounted(() => {
       fill="transparent"
       stroke-width="4"
     />
-    <circle cx="21" cy="21" r="1" stroke="#ddd6cc" fill="#ddd6cc" stroke-width="10" />
-    <circle cx="21" cy="21" r="1" stroke="#374151" fill="#374151" stroke-width="5" />
   </svg>
 </template>
 
@@ -90,5 +90,27 @@ onUnmounted(() => {
 
 .cursor-svg rect {
   transition: all 0.25s ease;
+}
+
+.cursor-svg rect,
+.cursor-svg circle {
+  animation: appear 1s forwards;
+}
+
+@keyframes appear {
+  from {
+    width: 0px;
+    height: 0px;
+    r: 0;
+    x: 21px;
+    y: 21px;
+  }
+  to {
+    width: 32px;
+    height: 32px;
+    r: 1px;
+    x: 5px;
+    y: 5px;
+  }
 }
 </style>
