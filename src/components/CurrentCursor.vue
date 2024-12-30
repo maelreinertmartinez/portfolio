@@ -94,7 +94,7 @@ onUnmounted(() => {
 
 .cursor-svg rect,
 .cursor-svg circle {
-  animation: appear 1s forwards;
+  animation: appear 0.5s forwards;
 }
 
 @keyframes appear {
