@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Launcher from './views/Launcher.vue'
+import Launcher from './views/LauncherView.vue'
 import WorkInProgressView from './views/WorkInProgressView.vue'
 import Cursor from './components/Cursor.vue'
 import { usePageStore } from './stores/page'

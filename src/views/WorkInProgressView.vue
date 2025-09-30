@@ -11,6 +11,11 @@ onMounted(() => {
 
 <template>
   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-    <TypedTitle ref="typedTitle" text="WORK IN PROGRESS" />
+    <TypedTitle
+      ref="typedTitle"
+      text="WORK IN PROGRESS"
+      :textWritingSpeed="100"
+      :cursorVisible="true"
+    />
   </div>
 </template>
