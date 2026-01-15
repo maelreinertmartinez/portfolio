@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LauncherBorders from '../components/LauncherBorders.vue'
 import { onMounted, ref } from 'vue'
-import TypedTitle from '../components/TypedTitle.vue'
+import TypedTitle from '../components/TypedText.vue'
 import { usePageStore } from '../stores/page'
 
 const button = ref<HTMLButtonElement | null>(null)
@@ -9,75 +9,54 @@ const launcherBorders = ref<typeof LauncherBorders | null>(null)
 const typedTitle = ref<typeof TypedTitle | null>(null)
 const isButtonInterractable = ref(false)
 const hover = ref(false)
-const pageStore = usePageStore()
 const isBorderVisible = ref(false)
-const cursorVisible = ref(true)
+const pageStore = usePageStore()
+
+const showBorders = () => (isBorderVisible.value = true)
+const hideBorders = () => (isBorderVisible.value = false)
 
 const launchButtonHover = () => {
   hover.value = true
   if (!launcherBorders.value || !isButtonInterractable.value) return
-  isBorderVisible.value = true
+  showBorders()
 }
 
-const launchButtonLeave = () => {
+const launchButtonExit = () => {
   hover.value = false
   if (!launcherBorders.value || !isButtonInterractable.value) return
-  isBorderVisible.value = false
+  hideBorders()
 }
 
 /**
  * Launch button click handler
  */
 const launch = () => {
-  if (!button.value) return
+  if (button.value) {
+    button.value.classList.add('pointer-events-none')
+  }
 
-  button.value.classList.add('pointer-events-none')
-  playLeaveAnimation()
+  hideBorders()
   playRemovingAnimation()
 }
 
-const playLeaveAnimation = () => {
+const playTypingAnimation = () => {
   if (!launcherBorders.value) return
-  isBorderVisible.value = false
+  typedTitle.value
+    ?.appear()
+    .then(() => launcherBorders.value?.updateDimensionsAndRectangles())
+    .then(() => {
+      isButtonInterractable.value = true
+      if (hover.value) isBorderVisible.value = true
+    })
 }
 
 const playRemovingAnimation = () => {
   if (!launcherBorders.value) return
-  cursorVisible.value = true
-
-  setTimeout(() => typedTitle.value?.playRemovingAnimation(), 600)
-}
-
-const playArrivalAnimation = () => {
-  if (!launcherBorders.value) return
-  cursorVisible.value = true
-  setTimeout(() => typedTitle.value?.playTypingAnimation(), 2000)
-}
-
-/**
- * Handler for when typing animation is complete
- */
-const onTypingComplete = () => {
-  setTimeout(() => {
-    cursorVisible.value = false
-    launcherBorders.value?.updateDimensionsAndRectangles()
-    setTimeout(() => (isButtonInterractable.value = true), 700)
-    setTimeout(() => {
-      if (hover.value) {
-        isBorderVisible.value = true
-      }
-    }, 700)
-  }, 100)
-}
-
-const onRemovingComplete = () => {
-  if (!launcherBorders.value) return
-  cursorVisible.value = false
-  setTimeout(() => (pageStore.name = 'work-in-progress'), 500)
+  typedTitle.value?.disappear().then(() => (pageStore.name = 'home'))
 }
 
 onMounted(() => {
-  playArrivalAnimation()
+  playTypingAnimation()
 })
 </script>
 
@@ -98,16 +77,9 @@ onMounted(() => {
         class="flex justify-center items-center"
         @click="launch"
         @mouseover="launchButtonHover"
-        @mouseout="launchButtonLeave"
+        @mouseout="launchButtonExit"
       >
-        <TypedTitle
-          text="LAUNCH"
-          :textWritingSpeed="100"
-          :cursorVisible="cursorVisible"
-          ref="typedTitle"
-          @typingComplete="onTypingComplete"
-          @removingComplete="onRemovingComplete"
-        />
+        <TypedTitle ref="typedTitle" text="LAUNCH" :fontSize="36" />
       </button>
     </LauncherBorders>
   </div>

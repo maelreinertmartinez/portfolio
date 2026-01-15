@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import RoundedRectangle from '@/utils/RoundedRectangle'
-import { onMounted, onUnmounted, ref, computed, defineExpose } from 'vue'
+import { onMounted, onUnmounted, ref, computed, nextTick } from 'vue'
 
 // Interface to type the props
 interface Props {
@@ -16,13 +16,14 @@ interface Props {
 const props = defineProps<Props>()
 
 // Refs and local states
-const bigRectangle = ref<RoundedRectangle>(new RoundedRectangle(0, 0))
-const smallRectangle = ref<RoundedRectangle>(new RoundedRectangle(0, 0))
+const rectangle = ref<RoundedRectangle>(new RoundedRectangle(0, 0))
+const contentRectangle = ref<RoundedRectangle>(new RoundedRectangle(0, 0))
 const content = ref<HTMLDivElement | null>(null)
 const contentWidth = ref(0)
 const contentHeight = ref(0)
 const windowWidth = ref(0)
 const resizeTimeout = ref<number | null>(null)
+const transitionDuration = ref<number>(props.animationDuration)
 
 // SSR-safe: initialize windowWidth only on client side
 if (typeof window !== 'undefined') {
@@ -39,22 +40,23 @@ const animatedBorderWidth = computed(() => {
   )
 })
 
-const animatedBorderHeight = computed(() => {
-  return contentHeight.value + props.borderThickness * 2 + props.paddingY * 2
-})
+const animatedBorderHeight = computed(
+  () => contentHeight.value + props.borderThickness * 2 + props.paddingY * 2,
+)
 
 // Calculate perimeters for stroke animations
-const bigPerimeter = computed(() => bigRectangle.value.getPerimeter() + 4 * props.borderThickness)
-const smallPerimeter = computed(
-  () => smallRectangle.value.getPerimeter() + 4 * props.borderThickness,
+const rectPerimeter = computed(() => rectangle.value.getPerimeter() + 4 * props.borderThickness)
+
+const contentPerimeter = computed(
+  () => contentRectangle.value.getPerimeter() + 4 * props.borderThickness,
 )
 
-const hiddenStrokeDashoffset = computed(() => `${smallPerimeter.value / 2}px`)
+const hiddenStrokeDashoffset = computed(() => `${contentPerimeter.value / 2}px`)
 const visibleStrokeDashoffset = computed(
-  () => `-${bigPerimeter.value / 2 - smallPerimeter.value / 2}px`,
+  () => `-${rectPerimeter.value / 2 - contentPerimeter.value / 2}px`,
 )
 
-const strokeDasharray = computed(() => `${smallPerimeter.value / 2}px 10000px`)
+const strokeDasharray = computed(() => `${contentPerimeter.value / 2}px 10000px`)
 const strokeDashoffset = computed(() =>
   props.visible ? visibleStrokeDashoffset.value : hiddenStrokeDashoffset.value,
 )
@@ -84,13 +86,13 @@ function updateContentDimensions() {
 
 // Update the rectangles according to latest measurements
 function updateRectangles() {
-  bigRectangle.value = new RoundedRectangle(
+  rectangle.value = new RoundedRectangle(
     animatedBorderWidth.value,
     animatedBorderHeight.value,
     props.borderRadius,
   )
 
-  smallRectangle.value = new RoundedRectangle(
+  contentRectangle.value = new RoundedRectangle(
     contentWidth.value + props.paddingX * 2,
     contentHeight.value + props.paddingY * 2,
     props.borderRadius,
@@ -98,9 +100,14 @@ function updateRectangles() {
 }
 
 // Main update function with well-separated responsibilities
-function updateDimensionsAndRectangles() {
+async function updateDimensionsAndRectangles() {
+  transitionDuration.value = 0
   updateContentDimensions()
   updateRectangles()
+  await nextTick()
+  requestAnimationFrame(() => {
+    transitionDuration.value = props.animationDuration
+  })
 }
 
 function fullUpdate() {
@@ -154,7 +161,7 @@ defineExpose({
         'stroke-dasharray': strokeDasharray,
         'stroke-dashoffset': strokeDashoffset,
         'transition-timing-function': transitionTimingFunction,
-        'transition-duration': `${props.animationDuration}s`,
+        'transition-duration': `${transitionDuration}s`,
       }"
       :class="[
         'top-1/2 -translate-y-1/2 absolute pointer-events-none transition-stroke-dashoffset',

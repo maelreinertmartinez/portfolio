@@ -18,7 +18,7 @@ onMounted(() => {
   updateFPSValue()
   setInterval(() => {
     fpsDisplay.value = fps.value
-  }, 500)
+  }, 100)
 })
 </script>
 
