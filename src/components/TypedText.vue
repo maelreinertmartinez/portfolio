@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { gsap } from 'gsap'
 
 /**
@@ -63,6 +63,37 @@ const cursorRef = ref<HTMLSpanElement>()
  * The active timeline animation
  */
 const activeTimeline = ref<gsap.core.Timeline>()
+
+/**
+ * Reference to the invisible text element used for measuring
+ */
+const measureRef = ref<HTMLSpanElement>()
+
+/**
+ * The width of the text container (to maintain size when empty)
+ */
+const containerWidth = ref<string>('auto')
+
+/**
+ * Measure the text width and update container width
+ */
+const measureTextWidth = (): void => {
+  if (!measureRef.value) return
+
+  const textWidth = measureRef.value.offsetWidth
+  const cursorWidth = props.fontSize * CURSOR_WIDTH_RATIO
+  containerWidth.value = `${textWidth + cursorWidth}px`
+}
+
+/**
+ * Watch for changes in text or fontSize to remeasure
+ */
+watch([() => props.text, () => props.fontSize], () => measureTextWidth())
+
+/**
+ * Measure text width after mount
+ */
+onMounted(() => measureTextWidth())
 
 /**
  * Get the delay for a given index, using firstItemDelay for the first item and defaultDelay for others
@@ -222,15 +253,21 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <p class="text font-bold text-primary-dark relative" :style="{ fontSize: `${fontSize}px` }">
-    {{ displayedText }}
-    <span
-      ref="cursorRef"
-      class="absolute top-1/2 -translate-y-1/2 bg-primary-dark opacity-0"
-      :style="{
-        height: `${fontSize}px`,
-        width: `${fontSize * CURSOR_WIDTH_RATIO}px`,
-      }"
-    />
-  </p>
+  <div class="relative" :style="{ width: containerWidth, height: `${fontSize * 1.5}px` }">
+    <p class="text text-primary-dark" :style="{ fontSize: `${fontSize}px` }">
+      <!-- Invisible element to measure the full text width -->
+      <span ref="measureRef" class="invisible absolute">
+        {{ text }}
+      </span>
+      {{ displayedText }}
+      <span
+        ref="cursorRef"
+        class="absolute top-1/2 -translate-y-1/2 bg-primary-dark opacity-0"
+        :style="{
+          height: `${fontSize}px`,
+          width: `${fontSize * CURSOR_WIDTH_RATIO}px`,
+        }"
+      />
+    </p>
+  </div>
 </template>

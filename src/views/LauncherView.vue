@@ -9,11 +9,10 @@ const launcherBorders = ref<typeof LauncherBorders | null>(null)
 const typedTitle = ref<typeof TypedTitle | null>(null)
 const isButtonInterractable = ref(false)
 const hover = ref(false)
-const isBorderVisible = ref(false)
 const pageStore = usePageStore()
 
-const showBorders = () => (isBorderVisible.value = true)
-const hideBorders = () => (isBorderVisible.value = false)
+const showBorders = () => launcherBorders.value?.appear()
+const hideBorders = () => launcherBorders.value?.disappear()
 
 const launchButtonHover = () => {
   hover.value = true
@@ -41,13 +40,10 @@ const launch = () => {
 
 const playTypingAnimation = () => {
   if (!launcherBorders.value) return
-  typedTitle.value
-    ?.appear()
-    .then(() => launcherBorders.value?.updateDimensionsAndRectangles())
-    .then(() => {
-      isButtonInterractable.value = true
-      if (hover.value) isBorderVisible.value = true
-    })
+  typedTitle.value?.appear().then(() => {
+    isButtonInterractable.value = true
+    if (hover.value) launcherBorders.value?.appear()
+  })
 }
 
 const playRemovingAnimation = () => {
@@ -62,24 +58,16 @@ onMounted(() => {
 
 <template>
   <div class="h-full w-full">
-    <LauncherBorders
-      ref="launcherBorders"
-      :visible="isBorderVisible"
-      :border-radius="16"
-      :border-thickness="8"
-      :padding-x="16"
-      :padding-y="16"
-      :border-color="'#ffb100'"
-      :animation-duration="0.7"
-    >
+    <LauncherBorders ref="launcherBorders">
       <button
         ref="button"
         class="flex justify-center items-center"
+        :disabled="!isButtonInterractable"
         @click="launch"
         @mouseover="launchButtonHover"
         @mouseout="launchButtonExit"
       >
-        <TypedTitle ref="typedTitle" text="LAUNCH" :fontSize="36" />
+        <TypedTitle ref="typedTitle" text="LAUNCH" class="font-bold" :fontSize="36" />
       </button>
     </LauncherBorders>
   </div>

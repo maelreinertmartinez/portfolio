@@ -20,11 +20,13 @@ const updateCursorPosition = (e: MouseEvent) => {
 
   if (isHoveringClickableElement.value === undefined) {
     isHoveringClickableElement.value =
-      element?.matches('button, a') || element?.closest('button, a') !== null
+      element?.matches('button:not([disabled]), a') ||
+      element?.closest('button:not([disabled]), a') !== null
     updateRadius(isHoveringClickableElement.value)
   } else {
     isHoveringClickableElement.value =
-      element?.matches('button, a') || element?.closest('button, a') !== null
+      element?.matches('button:not([disabled]), a') ||
+      element?.closest('button:not([disabled]), a') !== null
     if (isHoveringClickableElement.value !== lastIsHoveringClickableElement)
       updateRadius(isHoveringClickableElement.value)
   }

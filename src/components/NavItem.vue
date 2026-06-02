@@ -1,12 +1,31 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import TypedText from './TypedText.vue'
+
 defineProps<{
   href?: string
+  text: string
 }>()
+
+const typedText = ref<typeof TypedText | null>(null)
+
+defineExpose({
+  /**
+   * Run the appear animation
+   * @returns The timeline
+   */
+  appear: (): gsap.core.Timeline => typedText.value?.appear(),
+  /**
+   * Run the disappear animation
+   * @returns The timeline
+   */
+  disappear: (): gsap.core.Timeline => typedText.value?.disappear(),
+})
 </script>
 
 <template>
-  <a :href="href ? href : '#'" class="text-[#1A1200] text-lg w-fit no-underline relative">
-    <slot> Missing content </slot>
+  <a :href="href ? href : '#'" class="text-[#1A1200] w-fit no-underline relative">
+    <TypedText ref="typedText" :text="text" :font-size="18" />
   </a>
 </template>
 

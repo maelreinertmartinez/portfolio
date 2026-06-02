@@ -1,141 +1,89 @@
 <script setup lang="ts">
-import RoundedRectangle from '@/utils/RoundedRectangle'
-import { onMounted, onUnmounted, ref, computed, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
+import { BORDERS } from '@/constants/constants'
+import { useWindowResize } from '@/composables/useWindowResize'
+import { useResizeObserver } from '@/composables/useResizeObserver'
+import { useBorderDimensions } from '@/composables/useBorderDimensions'
 
-// Interface to type the props
-interface Props {
-  borderRadius: number
-  borderThickness: number
-  paddingX: number
-  paddingY: number
-  borderColor: string
-  animationDuration: number
-  visible: boolean
-}
-
-const props = defineProps<Props>()
-
-// Refs and local states
-const rectangle = ref<RoundedRectangle>(new RoundedRectangle(0, 0))
-const contentRectangle = ref<RoundedRectangle>(new RoundedRectangle(0, 0))
+/**
+ * Reference to the content element (slot)
+ */
 const content = ref<HTMLDivElement | null>(null)
+
+/**
+ * The width of the content element
+ */
 const contentWidth = ref(0)
+
+/**
+ * The height of the content element
+ */
 const contentHeight = ref(0)
-const windowWidth = ref(0)
-const resizeTimeout = ref<number | null>(null)
-const transitionDuration = ref<number>(props.animationDuration)
 
-// SSR-safe: initialize windowWidth only on client side
-if (typeof window !== 'undefined') {
-  windowWidth.value = window.innerWidth
-}
+/**
+ * Whether an animation is currently in progress
+ */
+const isAnimating = ref(false)
 
-// Compute the animated border dimensions
-const animatedBorderWidth = computed(() => {
-  return (
-    props.borderThickness * 1.5 +
-    props.paddingX +
-    (contentWidth.value + windowWidth.value) / 2 +
-    props.borderRadius
-  )
-})
+/**
+ * The current transition duration for animations
+ */
+const transitionDuration = ref<number>(BORDERS.ANIMATION_DURATION)
 
-const animatedBorderHeight = computed(
-  () => contentHeight.value + props.borderThickness * 2 + props.paddingY * 2,
-)
+/**
+ * Whether the borders are currently visible
+ */
+const isVisible = ref(false)
 
-// Calculate perimeters for stroke animations
-const rectPerimeter = computed(() => rectangle.value.getPerimeter() + 4 * props.borderThickness)
+// Use composables
+const { windowWidth } = useWindowResize()
 
-const contentPerimeter = computed(
-  () => contentRectangle.value.getPerimeter() + 4 * props.borderThickness,
-)
-
-const hiddenStrokeDashoffset = computed(() => `${contentPerimeter.value / 2}px`)
-const visibleStrokeDashoffset = computed(
-  () => `-${rectPerimeter.value / 2 - contentPerimeter.value / 2}px`,
-)
-
-const strokeDasharray = computed(() => `${contentPerimeter.value / 2}px 10000px`)
-const strokeDashoffset = computed(() =>
-  props.visible ? visibleStrokeDashoffset.value : hiddenStrokeDashoffset.value,
-)
-
-const transitionTimingFunction = computed(() =>
-  props.visible ? 'cubic-bezier(0,0,.4,1)' : 'cubic-bezier(.6,0,1,1)',
-)
-
-// Debounced update of window width on resize event
-function updateWindowWidth() {
-  if (resizeTimeout.value) {
-    clearTimeout(resizeTimeout.value)
-  }
-  resizeTimeout.value = window.setTimeout(() => {
-    windowWidth.value = window.innerWidth
-    updateRectangles()
-  }, 100) // 100ms delay
-}
-
-// Update content size (slot) dimensions
-function updateContentDimensions() {
-  if (content.value) {
-    contentWidth.value = content.value.offsetWidth
-    contentHeight.value = content.value.offsetHeight
-  }
-}
-
-// Update the rectangles according to latest measurements
-function updateRectangles() {
-  rectangle.value = new RoundedRectangle(
-    animatedBorderWidth.value,
-    animatedBorderHeight.value,
-    props.borderRadius,
-  )
-
-  contentRectangle.value = new RoundedRectangle(
-    contentWidth.value + props.paddingX * 2,
-    contentHeight.value + props.paddingY * 2,
-    props.borderRadius,
-  )
-}
-
-// Main update function with well-separated responsibilities
-async function updateDimensionsAndRectangles() {
-  transitionDuration.value = 0
-  updateContentDimensions()
-  updateRectangles()
-  await nextTick()
-  requestAnimationFrame(() => {
-    transitionDuration.value = props.animationDuration
-  })
-}
-
-function fullUpdate() {
-  updateWindowWidth() // windowWidth updated with debounce
-  updateDimensionsAndRectangles()
-}
-
-// Vue lifecycle hooks, resize listener only on client
-onMounted(() => {
-  if (typeof window !== 'undefined') {
-    updateDimensionsAndRectangles()
-    window.addEventListener('resize', updateWindowWidth)
-  }
-})
-
-onUnmounted(() => {
-  if (typeof window !== 'undefined') {
-    window.removeEventListener('resize', updateWindowWidth)
-    if (resizeTimeout.value) {
-      clearTimeout(resizeTimeout.value)
-    }
-  }
-})
-
-// Expose more descriptive update functions
-defineExpose({
+const {
+  animatedBorderWidth,
+  animatedBorderHeight,
+  strokeDasharray,
+  strokeDashoffset,
+  transitionTimingFunction,
   updateDimensionsAndRectangles,
-  fullUpdate,
+} = useBorderDimensions(contentWidth, contentHeight, windowWidth, isVisible, transitionDuration)
+
+useResizeObserver(
+  content,
+  (contentElement, skipTransitionReset) =>
+    updateDimensionsAndRectangles(contentElement, skipTransitionReset),
+  isAnimating,
+)
+
+/**
+ * Rectangle configurations for the two border rectangles (normal and rotated)
+ */
+const rectConfigs = [{ rotation: 0 }, { rotation: 180 }] as const
+
+// Initialize dimensions on mount
+onMounted(async () => {
+  await updateDimensionsAndRectangles(content.value)
+})
+
+/**
+ * Toggle visibility with animation tracking
+ */
+const toggleVisibility = (visible: boolean) => {
+  isAnimating.value = true
+  isVisible.value = visible
+  setTimeout(() => {
+    isAnimating.value = false
+  }, BORDERS.ANIMATION_DURATION * 1000)
+}
+
+defineExpose({
+  /**
+   * Show the borders (appear animation)
+   */
+  appear: () => toggleVisibility(true),
+  /**
+   * Hide the borders (disappear animation)
+   */
+  disappear: () => toggleVisibility(false),
 })
 </script>
 
@@ -164,40 +112,24 @@ defineExpose({
         'transition-duration': `${transitionDuration}s`,
       }"
       :class="[
-        'top-1/2 -translate-y-1/2 absolute pointer-events-none transition-stroke-dashoffset',
-        `drop-shadow-[0_0_2px_${props.borderColor}]`,
+        'top-1/2 -translate-y-1/2 absolute pointer-events-none transition-[stroke-dashoffset]',
+        `drop-shadow-[0_0_2px_#ffb100]`,
       ]"
     >
       <rect
-        :x="-props.borderRadius"
-        :y="props.borderThickness / 2"
-        :width="animatedBorderWidth - props.borderThickness"
-        :height="animatedBorderHeight - props.borderThickness"
-        :rx="props.borderRadius"
-        :stroke="props.borderColor"
-        :stroke-width="props.borderThickness"
+        v-for="(config, index) in rectConfigs"
+        :key="index"
+        :x="-BORDERS.RADIUS"
+        :y="BORDERS.THICKNESS / 2"
+        :width="animatedBorderWidth - BORDERS.THICKNESS"
+        :height="animatedBorderHeight - BORDERS.THICKNESS"
+        :rx="BORDERS.RADIUS"
+        stroke="#ffb100"
+        :stroke-width="BORDERS.THICKNESS"
         stroke-linecap="round"
         fill="none"
-        class="origin-center rotate-180"
-      />
-      <rect
-        :x="-props.borderRadius"
-        :y="props.borderThickness / 2"
-        :width="animatedBorderWidth - props.borderThickness"
-        :height="animatedBorderHeight - props.borderThickness"
-        :rx="props.borderRadius"
-        :stroke="props.borderColor"
-        :stroke-width="props.borderThickness"
-        stroke-linecap="round"
-        fill="none"
+        :class="config.rotation === 180 ? 'origin-center rotate-180' : ''"
       />
     </svg>
   </div>
 </template>
-
-<style scoped>
-/* Extract transition animation styles into CSS for maintainability */
-.transition-stroke-dashoffset {
-  transition-property: stroke-dashoffset;
-}
-</style>
