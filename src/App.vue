@@ -6,6 +6,7 @@ import FPSCounter from './components/FPSCounter.vue'
 import MainView from './views/MainView.vue'
 
 const pageStore = usePageStore()
+const isDev = import.meta.env.DEV
 </script>
 
 <template>
@@ -15,6 +16,5 @@ const pageStore = usePageStore()
     <MainView />
   </div>
   <Cursor />
-  <FPSCounter />
-  <!-- <Palette class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[200px] h-[100px]" /> -->
+  <FPSCounter v-if="isDev" />
 </template>

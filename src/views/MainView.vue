@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import EdgeBorder from '@/components/EdgeBorder.vue'
 import NavItem from '@/components/NavItem.vue'
 import { usePageStore } from '@/stores/page'
+import { ANIMATIONS } from '@/constants/constants'
 
 const pageStore = usePageStore()
 const edgeBorder = ref<typeof EdgeBorder | null>(null)
@@ -17,7 +18,7 @@ onMounted(() => {
   skillsNavItem.value?.appear()
   setTimeout(() => {
     edgeBorder.value?.showBorder()
-  }, 1000)
+  }, ANIMATIONS.NAV_APPEAR_DELAY)
 })
 </script>
 
